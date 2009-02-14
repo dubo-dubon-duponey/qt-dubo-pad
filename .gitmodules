@@ -1,0 +1,6 @@
+[submodule "config"]
+	path = config
+	url = https://github.com/dubo-dubon-duponey/qt-dubo-qmakeitup
+[submodule "third-party/depot_tools"]
+	path = third-party/depot_tools
+	url = https://chromium.googlesource.com/chromium/tools/depot_tools.git

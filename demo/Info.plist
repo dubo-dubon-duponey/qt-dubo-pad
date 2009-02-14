@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CFBundleExecutable</key>
+    <string>@EXECUTABLE@</string>
+    <key>CFBundleGetInfoString</key>
+    <string>Created by Dubo, Dubon, et du Poney</string>
+    <key>CFBundleIconFile</key>
+    <string>@ICON@</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.dubo.dubopad-demo</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleSignature</key>
+    <string>DUBO</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>${MACOSX_DEPLOYMENT_TARGET}</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+
+    <key>CFBundleName</key>
+    <string>DuboPad Demo</string>
+    <key>CFBundleShortVersionString</key>
+    <string>@SHORT_VERSION@</string>
+    <key>CFBundleVersion</key>
+    <string>@FULL_VERSION@</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.reference</string>
+    <key>NSHumanReadableCopyright</key>
+    <string>Copyright © 2018 Dubo. All rights reserved.</string>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+
+    <!-- DuboPad demo specific configuration -->
+    <key>DuboPadServer</key>
+    <string>https://sentry.io/api/1361032/minidump/?sentry_key=3a828ed2d8c548228fc609006424e6b8</string>
+    <key>DuboPadAutoUpload</key>
+    <string>YES</string>
+    <key>DuboPadEnableSystemCrashReport</key>
+    <string>NO</string>
+    <key>DuboPadRateLimit</key>
+    <string>NO</string>
+
+  </dict>
+</plist>

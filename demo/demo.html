@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <meta charset="utf8" />
+        <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+        <script>
+        new QWebChannel(qt.webChannelTransport, function(channel){
+            window.DuboNotifier = channel.objects.DuboNotifier;
+            DuboNotifier.clicked.connect(function(notification){
+                console.warn("A notification has been activated");
+                console.warn("Id was '", notification.Identifier, "'");
+                console.warn("User info was", JSON.stringify(notification.UserInfo));
+
+                console.warn(" - Was it 'content' activation?", notification.ActivationType === notification.ACTIVATION_CONTENT);
+                console.warn(" - Was it 'action' activation?", notification.ActivationType === notification.ACTIVATION_ACTION);
+                console.warn(" - Was it 'replied' activation?", notification.ActivationType === notification.ACTIVATION_REPLIED);
+                console.warn(" - Was it 'additional' activation?", notification.ActivationType === notification.ACTIVATION_ADDITIONAL_ACTION);
+                console.warn("Additional action was:", notification.AdditionalActivationAction);
+
+                console.warn("Provided answer is", notification.Response);
+            });
+        });
+
+        var dispatch = function(){
+            var a = DuboNotifier.create();
+            var b = DuboNotifier.create();
+            var c = DuboNotifier.create();
+            var d = DuboNotifier.create();
+
+            a.Identifier = "numero 1";
+            a.Title = "∞ Simple notification with title";
+            a.Subtitle = "Some subtitle";
+            a.Informative = "Some information";
+            a.Icon = document.getElementById("foo");
+            a.SoundName = a.SOUND_BLOW;
+            a.UserInfo = {
+                "id": "my_id for ∞",
+                "nickname for ∞": "my_nick"
+            };
+
+            DuboNotifier.dispatch(a);
+
+            b.Identifier = "numero 2";
+            b.Title = "With reply button";
+            b.HasReplyButton = true;
+            b.ResponsePlaceholder = "type here";
+
+            DuboNotifier.dispatch(b);
+
+            c.Identifier = "numero 3";
+            c.Title = "With action button";
+            c.HasActionButton = true;
+            c.ActionButtonTitle = "Some action";
+            c.OtherButtonTitle = "Foo this";
+
+            DuboNotifier.dispatch(c);
+
+            d.Identifier = "numero 4";
+            d.Title = "With multi-action";
+            d.HasActionButton = true;
+            d.ActionButtonTitle = "Main action";
+            d.OtherButtonTitle = "Bar this";
+            d.AdditionalActions = ["act1", "act2", "act3"];
+
+            DuboNotifier.dispatch(d);
+
+        };
+        </script>
+    </head>
+    <body>
+            <img id="foo" src="https://avatars3.githubusercontent.com/u/332946?s=460&amp;v=4" />
+            <button onclick="dispatch();">Dispatch #1</button>
+    </body>
+</html>
