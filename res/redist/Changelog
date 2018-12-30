@@ -1,1 +1,7 @@
+DuboPad-2.0.0:
+    Move to QT5 only
+    Rewrite from scratch
+    Moving to Crashpad
+
 DuboPad-1.0.0:
+    Initially forking of qBreakpad

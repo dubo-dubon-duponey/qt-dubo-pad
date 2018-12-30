@@ -18,8 +18,9 @@ git clone --recurse-submodules https://github.com/dubo-dubon-duponey/qt-dubo-pad
 # 4. Build
 cd qt-dubo-pad
 
-QMAKE_FLAGS="-j7" DUBO_LINK_TYPE=static qmake -r CONFIG-=debug CONFIG-=debug_and_release CONFIG+=release .
-# or on mac+brew: PATH=$(brew --prefix qt)/bin:$PATH QMAKE_FLAGS="-j7" DUBO_LINK_TYPE=static qmake -r CONFIG-=debug CONFIG-=debug_and_release CONFIG+=release .
+QMAKE_FLAGS="-j7" DUBO_LINK_TYPE=static qmake -r CONFIG-=debug CONFIG-=debug_and_release CONFIG+=release qt-dubo-pad.pro
+# or on mac+brew:
+# PATH=$(brew --prefix qt)/bin:$PATH QMAKE_FLAGS="-j7" DUBO_LINK_TYPE=static qmake -r CONFIG-=debug CONFIG-=debug_and_release CONFIG+=release qt-dubo-pad.pro
 
 # Then...
 make

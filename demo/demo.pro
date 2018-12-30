@@ -1,5 +1,7 @@
 TEMPLATE = app
-QT = core gui widgets
+QT = core widgets webengine webenginewidgets webchannel
+
+QMAKE_TARGET_BUNDLE_PREFIX=com.dubo-dubon-duponey
 
 PROJECT_ROOT = $$PWD/..
 include($$PROJECT_ROOT/config/qmakeitup.pri)
@@ -12,8 +14,22 @@ contains(DUBO_LINK_TYPE, static){
     DEFINES += LIBDUBOPAD_USE_STATIC
 }
 
-SOURCES +=  $$PWD/main.cpp
+SOURCES += $$PWD/main.cpp
 RESOURCES += $$PWD/demo.qrc
+
+mac{
+    # Add plist, and a nice icon
+    OTHER_FILES += $$PWD/Info.plist \
+        $$PWD/demo.icns
+
+    QMAKE_INFO_PLIST = $${PWD}/Info.plist
+    ICON = $${PWD}/demo.icns
+}
+
+
+
+
+
 
 LIBS += -L$${DUBO_EXTERNAL}/lib
 INCLUDEPATH += $${DUBO_EXTERNAL}/include
@@ -24,13 +40,6 @@ mac{
 
     # Helpers
     OBJECTIVE_SOURCES=helpers.mm
-
-    # Add plist with Pad properties, and a nice icon
-    OTHER_FILES += $$PWD/Info.plist \
-        $$PWD/main.icns
-
-    QMAKE_INFO_PLIST = $${PWD}/Info.plist
-    ICON = $${PWD}/main.icns
 
     # Copy over the handler
     PAD_HANDLER.files = $${DESTDIR}/crashpad_handler
