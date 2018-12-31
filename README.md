@@ -44,6 +44,15 @@ To integrate with your own application, just look into `demo`.
  * https://groups.google.com/forum/#!topic/google-breakpad-discuss/fierVnIAv1M
  * https://chromium-review.googlesource.com/c/breakpad/breakpad/+/1329752 (https://groups.google.com/forum/#!topic/google-breakpad-discuss/xwbJMvKSI-M)
 
+### Symbolification
+
+Tested with sentry:
+
+ * generate pdb file `dump_syms myappbinary > myappbinary.pdb`
+ * `brew install getsentry/tools/sentry-cli`
+ * upload to sentry: `sentry-cli --auth-token YOUR_AUTH_TOKEN upload-dif --org YOUR_ORG_SLUG --project YOUR_PROJECT_SLUG PATH_TO_DSYMS`
+ * rinse repeat last two steps for QtCore and any other library being linked if you want symbols there too
+
 ### State of affairs
 
  * not clear what format is sent over the wire (sentry works, not electron mini server)
@@ -51,12 +60,3 @@ To integrate with your own application, just look into `demo`.
  * implement and test for windows and linux
  * what happens is an app is relocated / moved after start, but before crash? (eg: handler path is invalid now?)
  * write some actual documentation!
-
-### Symbolification
-
-For sentry:
-
-* generate pdb file `dump_syms myappbinary > myappbinary.pdb`
- * `brew install getsentry/tools/sentry-cli`
- * upload to sentry: `sentry-cli --auth-token YOUR_AUTH_TOKEN upload-dif --org YOUR_ORG_SLUG --project YOUR_PROJECT_SLUG PATH_TO_DSYMS`
- * rinse repeat last two steps for QtCore and any other library being linked if you want symbols there too
