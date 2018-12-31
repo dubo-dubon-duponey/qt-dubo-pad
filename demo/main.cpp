@@ -8,19 +8,11 @@
 #include <libdubopad/client.h>
 #include <libdubopad/root.h>
 
-// Define helper for plist info retrieval
-QString ReadFromAppInfo(const QString key);
+#include <QWebChannel>
 
-// Helper that crashes the application
-void crashit(){
-    // Crash it baby
-    QString * dumb;
-    QByteArray a = dumb->toLocal8Bit();
-}
+#include "helpers.h"
 
-// helper that dumps version info about the library
-void info()
-{
+void OutputLibraryInfo(){
     DuboPad::Root * root = new DuboPad::Root();
     qDebug() << root->property("NAME");
     qDebug() << root->property("VENDOR");
@@ -33,80 +25,125 @@ void info()
     qDebug() << root->property("PLUGIN_NAME");
     qDebug() << root->property("PLUGIN_VERSION");
     qDebug() << root->property("PLUGIN_REVISION");
+
 }
 
-// Main...
-int main(int argc, char *argv[])
-{
-    // Get your app going
-    QApplication app(argc, argv);
+void OutputConfiguration(DuboPad::Client * pad){
+    qDebug() << "Using crashpad handler located in:" << pad->config->HandlerPath;
+    qDebug() << "Storing crashes in:" << pad->config->CrashDirectory;
+    qDebug() << "Reported product name, version, platform:" << pad->config->Product << pad->config->Version << pad->config->Platform;
+    qDebug() << "Enable system crash reporter as well?" << pad->config->EnableSystemCrashReport;
+    qDebug() << "Automatically upload crashes?" << pad->config->AutoUpload;
+    qDebug() << "Rate limit uploads?" << pad->config->RateLimit;
+    qDebug() << "Using server:" << pad->config->Server;
+}
 
-    // Just print out some info about the library
-    info();
-
-    // Get the path for crashpad_handler
+void Configure(DuboPad::Client * pad){
+    // Get the path for crashpad_handler - if you put it somewhere else, change below
     QDir * d = new QDir(QCoreApplication::applicationDirPath());
     d->cdUp();
     d->cd("Helpers");
+
+    pad->config->HandlerPath = d->filePath("crashpad_handler");
 
     // Get the app data path, create a Dubopad subdir to store the crah database
     QDir * e = new QDir(QStandardPaths::standardLocations(QStandardPaths::AppDataLocation)[0]);
     e->mkdir("Dubopad");
     e->cd("Dubopad");
 
-    // Create the client
-    DuboPad::Client * c = new DuboPad::Client();
+    pad->config->CrashDirectory = e->path();
 
-    // Configure now
-    // Set the paths
-    c->config->HandlerPath = d->filePath("crashpad_handler");
-    c->config->CrashDirectory = e->path();
+    // As an example, get the rest of the configuration from the Info.plist (mac only), or set it to whatever you want
+    pad->config->Product = Helpers::ReadFromAppInfo("CFBundleName");
+    pad->config->Version = Helpers::ReadFromAppInfo("CFBundleShortVersionString");
+    pad->config->Platform = pad->config->PLATFORM_MAC();
 
-    // As an example, get the rest of the configuration from the Info.plist
-    c->config->Product = ReadFromAppInfo("CFBundleName");
-    c->config->Version = ReadFromAppInfo("CFBundleShortVersionString");
-    c->config->Platform = c->config->PLATFORM_MAC();
-
-    QString sys = ReadFromAppInfo("DuboPadEnableSystemCrashReport");
+    QString sys = Helpers::ReadFromAppInfo("DuboPadEnableSystemCrashReport");
     if (sys == "YES"){
-        c->config->EnableSystemCrashReport = true;
+        pad->config->EnableSystemCrashReport = true;
     }
 
-    QString rl = ReadFromAppInfo("DuboPadRateLimit");
+    QString rl = Helpers::ReadFromAppInfo("DuboPadRateLimit");
     if (rl == "YES"){
-        c->config->RateLimit = true;
+        pad->config->RateLimit = true;
     }
 
-    QString up = ReadFromAppInfo("DuboPadAutoUpload");
+    QString up = Helpers::ReadFromAppInfo("DuboPadAutoUpload");
     if (up == "NO"){
-        c->config->AutoUpload = false;
+        pad->config->AutoUpload = false;
     }
 
-    c->config->Server = ReadFromAppInfo("DuboPadServer");
+    pad->config->Server = Helpers::ReadFromAppInfo("DuboPadServer");
 
     // Any additional info you want to pass along
-    c->config->Infos["random_foobar"] = "some random_foobar";
+    pad->config->Infos["random_foobar"] = "This is purely from QT side";
+}
 
-    qDebug() << "Using crashpad handler located in:" << c->config->HandlerPath;
-    qDebug() << "Storing crashes in:" << c->config->CrashDirectory;
-    qDebug() << "Reported product name, version, platform:" << c->config->Product << c->config->Version << c->config->Platform;
-    qDebug() << "Enable system crash reporter as well?" << c->config->EnableSystemCrashReport;
-    qDebug() << "Automatically upload crashes?" << c->config->AutoUpload;
-    qDebug() << "Rate limit uploads?" << c->config->RateLimit;
-    qDebug() << "Using server:" << c->config->Server;
+/**
+ * Example implementation in a QT app
+ */
+int mainNoJavascript(int argc, char *argv[])
+{
+    // Get your app going
+    QApplication app(argc, argv);
 
+    // Create the client
+    DuboPad::Client * pad = new DuboPad::Client();
 
-    // Display something useless...
+    // Basic configuration
+    Configure(pad);
+
+    // Show something
     QWidget * r = new QWidget;
     r->show();
 
-    // Start the crash reporter
-    c->Start();
+    // Just spit out library info
+    OutputLibraryInfo();
+    // Spit out current configuration
+    OutputConfiguration(pad);
+
+    // Start the crash handler
+    pad->Start();
 
     // Shoot the app in 10... 9...
-    QTimer::singleShot(10000, crashit);
+    QTimer::singleShot(10000, Helpers::nhehehehe);
 
-    int a;
-    a = app.exec();
-    return a;
+    return app.exec();
+}
+
+
+/**
+ * Exemple implementation delegating start to the WebView so that javascript can add more information
+ * WARNING: use at your own risk...
+ */
+int mainJavascript(int argc, char *argv[])
+{
+    // Get your app going
+    QApplication app(argc, argv);
+
+    // Create the client
+    DuboPad::Client * pad = new DuboPad::Client();
+
+    // Basic configuration
+    Configure(pad);
+
+    // Display the webview
+    QWebChannel * chan = Helpers::SetupWebView();
+
+    // Attach objects to the javascript context
+    DuboPad::Root * root = new DuboPad::Root();
+    Helpers * crasher = new Helpers(root);
+
+    chan->registerObject("Root", root);
+    chan->registerObject("Dubo", pad);
+    chan->registerObject("Crasher", crasher);
+
+    return app.exec();
+}
+
+int main(int argc, char *argv[]){
+    // Delegated to javascript
+    return mainJavascript(argc, argv);
+    // Purely c++
+    // return mainNoJavascript(argc, argv);
 }

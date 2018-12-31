@@ -30,16 +30,18 @@ mac{
 
 
 
-
 LIBS += -L$${DUBO_EXTERNAL}/lib
 INCLUDEPATH += $${DUBO_EXTERNAL}/include
+
+SOURCES += $$PWD/helpers.cpp
+HEADERS += $$PWD/helpers.h
 
 mac{
     # AppKit necessary because of the helpers
     LIBS += -framework AppKit
 
     # Helpers
-    OBJECTIVE_SOURCES=helpers.mm
+    OBJECTIVE_SOURCES=$$PWD/mac.mm
 
     # Copy over the handler
     PAD_HANDLER.files = $${DESTDIR}/crashpad_handler

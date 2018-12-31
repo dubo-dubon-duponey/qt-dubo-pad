@@ -10,27 +10,9 @@
  */
 
 #include <AppKit/AppKit.h>
+#include <QString>
+#include "helpers.h"
 
-#include <QDebug>
-/*
-class Utils : public QObject
-{
-    Q_OBJECT
-public:
-    explicit Utils(QObject *parent = nullptr): QObject(parent){}
-    static QString ReadFromAppInfo(const QString key);
-
-signals:
-
-public slots:
-
-};
-
-QString Utils::ReadFromAppInfo(const QString key){
-    return QString::fromNSString([[[NSBundle mainBundle] infoDictionary] objectForKey:@(key.toStdString().c_str())]);
-}
-*/
-
-QString ReadFromAppInfo(const QString key){
+QString Helpers::ReadFromAppInfo(const QString key){
     return QString::fromNSString([[[NSBundle mainBundle] infoDictionary] objectForKey:@(key.toStdString().c_str())]);
 }

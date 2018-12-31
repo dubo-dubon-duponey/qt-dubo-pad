@@ -9,38 +9,50 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef DUBOPAD_CLIENT_H
-#define DUBOPAD_CLIENT_H
+#ifndef DUBOPAD_HELPERS_H
+#define DUBOPAD_HELPERS_H
 
-#include "libdubopad/global.h"
-#include "libdubopad/config.h"
 #include <QObject>
-#include <QEvent>
+#include <QtWebEngine>
+#include <QWebEngineView>
+#include <QWebEnginePage>
+#include <QFileInfo>
+#include <QDir>
+#include <QWebChannel>
 
-namespace DuboPad{
+class Helpers: public QObject
+{
+  Q_OBJECT
 
-class LIBDUBOPADSHARED_EXPORT Client: public QObject {
-    Q_OBJECT
 public:
-    explicit Client(QObject * parent = nullptr);
+    Helpers(QObject * parent = nullptr):QObject(parent){}
 
-    Q_INVOKABLE int Start();
-
-    Q_PROPERTY(QVariant Config READ getConfig CONSTANT)
-
-    Config * config = nullptr;
-
-    QVariant getConfig()
-    {
-        return QVariant::fromValue(static_cast<QObject *>(config));
+    Q_INVOKABLE static void nhehehehe(){
+        QString * dumb;
+        QByteArray a = dumb->toLocal8Bit();
     }
 
-signals:
+    static QString ReadFromAppInfo(const QString key);
 
-public slots:
+    static QWebChannel * SetupWebView()
+    {
+        QFileInfo jsFileInfo(QDir::currentPath() + "/qwebchannel.js");
 
-private:
+        if (!jsFileInfo.exists())
+            QFile::copy(":/qtwebchannel/qwebchannel.js", jsFileInfo.absoluteFilePath());
+
+        QtWebEngine::initialize();
+        QWebEngineView * view = new QWebEngineView();
+
+        QWebChannel * channel = new QWebChannel(view->page());
+        view->page()->setWebChannel(channel);
+
+        view->load(QUrl("qrc:/demo.html"));
+        view->show();
+
+        return channel;
+    }
+
 };
 
-}
-#endif // DUBOPAD_CLIENT_H
+#endif

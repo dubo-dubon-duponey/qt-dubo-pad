@@ -33,7 +33,7 @@ mac {
 
 # XXX version is kind of meaningless here
 # Also, this will be unusable if compiled against external sources
-DEFINES += CRASHPAD_VERSION=\\\"$${DUBO_INTERNAL_REVISION}\\\"
+DEFINES += CRASHPAD_VERSION=\\\"$${DUBO_INTERNAL_VERSION}\\\"
 DEFINES += CRASHPAD_REVISION=\\\"$${DUBO_INTERNAL_VERSION}\\\"
 
 

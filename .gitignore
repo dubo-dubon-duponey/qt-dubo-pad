@@ -5,3 +5,4 @@ Makefile*
 /third-party/crashpad
 /third-party/breakpad
 third-party/build.*
+/.qmake.stash

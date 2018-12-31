@@ -39,7 +39,7 @@ public:
     Q_PROPERTY(QString CrashDirectory   READ getCrashDirectory  CONSTANT)
     Q_PROPERTY(QString HandlerPath      READ getHandlerPath     CONSTANT)
 
-    Q_PROPERTY(QVariant Infos   READ getInfos   WRITE setInfos)
+    Q_PROPERTY(QVariant Infos   READ getInfos   WRITE setInfos  NOTIFY infosChanged)
 
     Q_PROPERTY(QString PLATFORM_MAC READ PLATFORM_MAC CONSTANT)
     Q_PROPERTY(QString PLATFORM_NUX READ PLATFORM_NUX CONSTANT)
@@ -73,6 +73,7 @@ signals:
     void enableSystemCrashReportChanged();
     void autoUploadChanged();
     void rateLimitChanged();
+    void infosChanged();
 
 private:
     QVariant getInfos() const

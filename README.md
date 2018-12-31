@@ -1,10 +1,12 @@
 # DuboPad
 
-Crashpad integration for QT, as a library.
+Crashpad library for QT.
 
 macOS only for now.
 
 Licensed under BSD2.
+
+Not a lot of value in there in term of code. This is mostly of interest for it provides a working example of how to integrate Crashpad into a QT application.
 
 ## TL;DR
 
@@ -22,17 +24,14 @@ QMAKE_FLAGS="-j7" DUBO_LINK_TYPE=static qmake -r CONFIG-=debug CONFIG-=debug_and
 # or on mac+brew:
 # PATH=$(brew --prefix qt)/bin:$PATH QMAKE_FLAGS="-j7" DUBO_LINK_TYPE=static qmake -r CONFIG-=debug CONFIG-=debug_and_release CONFIG+=release qt-dubo-pad.pro
 
-# Then...
 make
-
 
 # 5. Profit
 ls ../buildd/
+# Contains the headers and dubopad library that you need to compile against, plus an example demo application
 ```
 
-To integrate with your own application, just look into `demo` for how it's done.
-
-## Notes
+To integrate with your own application, just look into `demo`.
 
 ### Useful documentation
 
@@ -53,9 +52,11 @@ To integrate with your own application, just look into `demo` for how it's done.
  * what happens is an app is relocated / moved after start, but before crash? (eg: handler path is invalid now?)
  * write some actual documentation!
 
-### Symbolification & Sentry
+### Symbolification
 
- * brew install getsentry/tools/sentry-cli
- * Generate pdb file dump_syms myappbinary > myappbinary.pbd
- * upload to sentry: sentry-cli --auth-token YOUR_AUTH_TOKEN upload-dif --org YOUR_ORG_SLUG --project YOUR_PROJECT_SLUG PATH_TO_DSYMS
- * rinse repeat last two steps for QtCore and any other library being linked
+For sentry:
+
+* generate pdb file `dump_syms myappbinary > myappbinary.pdb`
+ * `brew install getsentry/tools/sentry-cli`
+ * upload to sentry: `sentry-cli --auth-token YOUR_AUTH_TOKEN upload-dif --org YOUR_ORG_SLUG --project YOUR_PROJECT_SLUG PATH_TO_DSYMS`
+ * rinse repeat last two steps for QtCore and any other library being linked if you want symbols there too

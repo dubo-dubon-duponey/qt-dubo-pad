@@ -4,10 +4,62 @@
         <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
         <script>
         new QWebChannel(qt.webChannelTransport, function(channel){
-            // channel.objects.DuboX;
+            // Purely for debug
+            window.XXX = channel.objects;
+
+            // Display library information
+            var disp = channel.objects.Root;
+            var iNode = document.getElementById("info");
+            var list = ["NAME", "VENDOR", "VERSION", "REVISION", "CHANGESET", "BUILD", "LINK", "QT", "PLUGIN_NAME", "PLUGIN_VERSION", "PLUGIN_REVISION"];
+
+            list.forEach(function(i){
+                var line = document.createElement("div");
+                line.appendChild(document.createTextNode(i + ": " + disp[i]));
+                iNode.appendChild(line)
+            });
+
+            // Display handler configuration
+            disp = channel.objects.Dubo.Config;
+            iNode = document.getElementById("config");
+            list = ["HandlerPath", "CrashDirectory", "Product", "Version", "Platform", "EnableSystemCrashReport", "AutoUpload", "RateLimit", "Server"];
+
+            list.forEach(function(i){
+                var line = document.createElement("div");
+                line.appendChild(document.createTextNode(i + ": " + disp[i]));
+                iNode.appendChild(line)
+            });
+
+            // A little something from javascript
+            var inf = disp.Infos;
+            inf.heyYa = "This is javascript speaking to you";
+            inf.something = "Different";
+            // This QVariant object is not live... need to reassign.
+            disp.Infos = inf;
+
+            // Wire-up the start & crash buttons
+            var crasher = document.getElementById("crash");
+                crasher.removeAttribute("disabled");
+            crasher.onclick = function(/*e*/){
+                channel.objects.Crasher.nhehehehe();
+            };
+
+            var starter = document.getElementById("start");
+            starter.removeAttribute("disabled");
+            starter.onclick = function(/*e*/){
+                channel.objects.Dubo.Start();
+            };
         });
-        </script>
-    </head>
-    <body>
-    </body>
-</html>
+    </script>
+</head>
+<body>
+    <h1>Library info</h1>
+    <div id="info">
+    </div>
+    <h1>Handler configuration</h1>
+    <div id="config">
+    </div>
+    <h1>Handler/Crasher</h1>
+    Click start to get the crash handler listening. Then click crash to trigger crash.<br />
+    <button id="start" disabled="disabled">Start the handler</button>
+    <button id="crash" disabled="disabled">Crash me!</button>
+</body>
