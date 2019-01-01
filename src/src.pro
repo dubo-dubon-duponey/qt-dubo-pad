@@ -24,6 +24,7 @@ HEADERS +=  $$PWD/lib$${TARGET}/global.h \
 
 mac {
     # Should work for other platforms as well - to be tested
+    system(mkdir -p $${DESTDIR}/../bin/)
     copydata.commands = $(COPY_DIR) $$PWD/../third-party/build.$${DUBO_PLATFORM}.$$system(uname -m)/bin/* $${DESTDIR}/../bin/
     first.depends = $(first) copydata
     export(first.depends)
