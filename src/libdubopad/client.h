@@ -26,14 +26,9 @@ public:
 
     Q_INVOKABLE int Start();
 
-    Q_PROPERTY(QVariant Config READ getConfig CONSTANT)
+    Q_PROPERTY(Config * Config MEMBER config CONSTANT)
 
     Config * config = nullptr;
-
-    QVariant getConfig()
-    {
-        return QVariant::fromValue(static_cast<QObject *>(config));
-    }
 
 signals:
 
