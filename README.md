@@ -1,6 +1,12 @@
 # DuboPad
 
-Crashpad library for QT.
+> "Dubo Components" are lightweight, targeted c++ libraries meant for QT applications.
+> They aim at providing *simple to use* interfaces for a range of functionality
+(notification, crash reporting, zero conf, application update, torrent, etc).
+> Fully scriptable, they are primarily meant for javascript (from a QWebEngine) - thought they are usable as well in plain QT.
+> Put together, these components should provide a comprehensive foundation for these building a "WebRunner", similarly to Electron.
+
+DuboPad is a crashpad library for QT.
 
 macOS only for now.
 
