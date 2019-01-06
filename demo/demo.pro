@@ -1,3 +1,5 @@
+CONFIG += c++14
+
 TEMPLATE = app
 QT = core widgets webengine webenginewidgets webchannel
 
@@ -25,7 +27,6 @@ mac{
     QMAKE_INFO_PLIST = $${PWD}/Info.plist
     ICON = $${PWD}/demo.icns
 }
-
 
 
 

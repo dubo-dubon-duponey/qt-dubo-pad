@@ -28,7 +28,7 @@ public:
     Helpers(QObject * parent = nullptr):QObject(parent){}
 
     Q_INVOKABLE static void nhehehehe(){
-        QString * dumb;
+        QString * dumb = nullptr;
         QByteArray a = dumb->toLocal8Bit();
     }
 
