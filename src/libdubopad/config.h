@@ -49,9 +49,6 @@ public:
     QString Version = "0.0.1";
     QString Platform = "OSX";
     QString Server = "http://localhost";
-    bool EnableSystemCrashReport = false;
-    bool AutoUpload = true;
-    bool RateLimit = false;
 
     QString CrashDirectory = "";
     QString HandlerPath = "";
@@ -64,6 +61,9 @@ public:
 
     QMap<QString, QString> Infos = QMap<QString, QString>();
 
+    bool EnableSystemCrashReport = false;
+    bool AutoUpload = true;
+    bool RateLimit = false;
 
 signals:
     void productChanged();
