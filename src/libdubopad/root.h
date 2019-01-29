@@ -60,7 +60,6 @@ public:
     /*! \brief The revision of the underlying torrent library.*/
     Q_PROPERTY(const QString PLUGIN_REVISION READ getLibRevision CONSTANT)
 
-
     /*! \cond */
     const QString getName();
     const QString getVendor();

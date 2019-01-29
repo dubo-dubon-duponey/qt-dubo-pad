@@ -24,7 +24,7 @@ Client::Client(QObject * parent): QObject(parent)
     config = new Config(this);
 }
 
-int Client::Start()
+int Client::start()
 {
     // Get the path to the local database and handler
     base::FilePath db(config->CrashDirectory.toStdString());
@@ -32,10 +32,6 @@ int Client::Start()
 
     // Create the annotations object
     std::map<std::string, std::string> annotations;
-    // Copy over prod, ver, plat
-    annotations["product"] = config->Product.toStdString();
-    annotations["version"]  = config->Version.toStdString();
-    annotations["platform"] = config->Platform.toStdString();
     // Copy over user informations
     QMap<QString, QString>::const_iterator i = config->Infos.constBegin();
     while (i != config->Infos.constEnd()) {

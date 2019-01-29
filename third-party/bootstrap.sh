@@ -109,7 +109,11 @@ if [ ! -d "breakpad/src" ]; then
     checkout_breakpad "chrome_64"
 fi
 
-build_crashpad "$revision" "$os" "$arch" "$mac_deployment_target"
-link_crashpad "$os" "$arch"
+if [ ! -e "build.$os.$arch/include/client" ]; then
+    build_crashpad "$revision" "$os" "$arch" "$mac_deployment_target"
+    link_crashpad "$os" "$arch"
+fi
 
-build_breakpad "chrome_64" "$os" "$arch" "$mac_deployment_target"
+if [ ! -e "build.$os.$arch/bin/dump_syms" ]; then
+    build_breakpad "chrome_64" "$os" "$arch" "$mac_deployment_target"
+fi

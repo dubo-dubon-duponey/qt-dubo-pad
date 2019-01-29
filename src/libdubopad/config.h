@@ -25,39 +25,39 @@ class LIBDUBOPADSHARED_EXPORT Config : public QObject
   Q_OBJECT
 
 public:
-    explicit Config(QObject * parent):QObject(parent){}
+    explicit Config(QObject * parent):QObject(parent){
+        Infos[QString::fromLatin1("product")] = QString::fromUtf8("My DuboPad App");
+        Infos[QString::fromLatin1("version")] = QString::fromLatin1("0.0.1");
+        Infos[QString::fromLatin1("platform")] = QSysInfo::productType();
+        Infos[QString::fromLatin1("platform-version")] = QSysInfo::productVersion();
+        Infos[QString::fromLatin1("cpu-build")] = QSysInfo::buildCpuArchitecture();
+        Infos[QString::fromLatin1("cpu-runtime")] = QSysInfo::currentCpuArchitecture();
+        // XXX nothing here, and not super useful (better done in javascript)
+//        Infos[QString::fromLatin1("machine-uuid")] = QString::fromLatin1(QSysInfo::machineUniqueId());
+//        Infos[QString::fromLatin1("boot-uuid")] = QString::fromLatin1(QSysInfo::bootUniqueId());
+    }
 
-    Q_PROPERTY(QString Product  MEMBER Product  NOTIFY productChanged)
-    Q_PROPERTY(QString Version  MEMBER Version  NOTIFY versionChanged)
-    Q_PROPERTY(QString Platform MEMBER Platform NOTIFY platformChanged)
-    Q_PROPERTY(QString Server   MEMBER Server   NOTIFY serverChanged)
+    // Sugar, actually stored in Infos
+    Q_PROPERTY(QString Product                  READ product WRITE setProduct   NOTIFY updated)
+    Q_PROPERTY(QString Version                  READ version WRITE setVersion   NOTIFY updated)
 
-    Q_PROPERTY(bool    EnableSystemCrashReport  MEMBER EnableSystemCrashReport  NOTIFY enableSystemCrashReportChanged)
-    Q_PROPERTY(bool    AutoUpload               MEMBER AutoUpload               NOTIFY autoUploadChanged)
-    Q_PROPERTY(bool    RateLimit                MEMBER RateLimit                NOTIFY rateLimitChanged)
+    // Main data object
+    Q_PROPERTY(QVariant Infos                   READ getInfos   WRITE setInfos  NOTIFY updated)
 
-    Q_PROPERTY(QString CrashDirectory   READ getCrashDirectory  CONSTANT)
-    Q_PROPERTY(QString HandlerPath      READ getHandlerPath     CONSTANT)
+    // Configuration
+    Q_PROPERTY(QString Server                   MEMBER Server                   NOTIFY updated)
+    Q_PROPERTY(bool    EnableSystemCrashReport  MEMBER EnableSystemCrashReport  NOTIFY updated)
+    Q_PROPERTY(bool    AutoUpload               MEMBER AutoUpload               NOTIFY updated)
+    Q_PROPERTY(bool    RateLimit                MEMBER RateLimit                NOTIFY updated)
 
-    Q_PROPERTY(QVariant Infos   READ getInfos   WRITE setInfos  NOTIFY infosChanged)
+    // These cannot be changed from javascript by design
+    Q_PROPERTY(QString CrashDirectory           READ getCrashDirectory          CONSTANT)
+    Q_PROPERTY(QString HandlerPath              READ getHandlerPath             CONSTANT)
 
-    Q_PROPERTY(QString PLATFORM_MAC READ PLATFORM_MAC CONSTANT)
-    Q_PROPERTY(QString PLATFORM_NUX READ PLATFORM_NUX CONSTANT)
-    Q_PROPERTY(QString PLATFORM_WIN READ PLATFORM_WIN CONSTANT)
+    QString Server = QString::fromUtf8("http://localhost");
 
-    QString Product = "MySuperApp";
-    QString Version = "0.0.1";
-    QString Platform = "OSX";
-    QString Server = "http://localhost";
-
-    QString CrashDirectory = "";
-    QString HandlerPath = "";
-    QString getCrashDirectory()     const {return CrashDirectory;}
-    QString getHandlerPath()        const {return HandlerPath;}
-
-    QString PLATFORM_MAC()          const {return QString::fromLatin1("macOS");}
-    QString PLATFORM_WIN()          const {return QString::fromLatin1("Windows");}
-    QString PLATFORM_NUX()          const {return QString::fromLatin1("Linux");}
+    QString CrashDirectory = QString::fromLatin1("");
+    QString HandlerPath = QString::fromLatin1("");
 
     QMap<QString, QString> Infos = QMap<QString, QString>();
 
@@ -66,16 +66,37 @@ public:
     bool RateLimit = false;
 
 signals:
-    void productChanged();
-    void versionChanged();
-    void platformChanged();
-    void serverChanged();
-    void enableSystemCrashReportChanged();
-    void autoUploadChanged();
-    void rateLimitChanged();
-    void infosChanged();
+    void updated();
 
 private:
+
+    QString getCrashDirectory()     const {return CrashDirectory;}
+    QString getHandlerPath()        const {return HandlerPath;}
+
+    QString product(){
+        QString key = QString::fromLatin1("product");
+        if (Infos.find(key) == Infos.end())
+            return QString::fromLatin1("");
+        return Infos[key];
+    }
+
+    void setProduct(QString product){
+        Infos[QString::fromLatin1("product")] = product;
+        emit updated();
+    }
+
+    QString version(){
+        QString key = QString::fromLatin1("version");
+        if (Infos.find(key) == Infos.end())
+            return QString::fromLatin1("");
+        return Infos[key];
+    }
+
+    void setVersion(QString version){
+        Infos[QString::fromLatin1("version")] = version;
+        emit updated();
+    }
+
     QVariant getInfos() const
     {
         QMap<QString, QVariant> list;
@@ -97,6 +118,7 @@ private:
             Infos[i.key()] = i.value().toString();
             ++i;
         }
+        emit updated();
     }
 };
 

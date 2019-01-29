@@ -42,7 +42,7 @@ void OutputLibraryInfo(){
 void OutputConfiguration(DuboPad::Client * pad){
     qDebug() << "Using crashpad handler located in:" << pad->config->HandlerPath;
     qDebug() << "Storing crashes in:" << pad->config->CrashDirectory;
-    qDebug() << "Reported product name, version, platform:" << pad->config->Product << pad->config->Version << pad->config->Platform;
+    qDebug() << "Reported product name, version, platform:" << pad->config->property("Product") << pad->config->property("Version");
     qDebug() << "Enable system crash reporter as well?" << pad->config->EnableSystemCrashReport;
     qDebug() << "Automatically upload crashes?" << pad->config->AutoUpload;
     qDebug() << "Rate limit uploads?" << pad->config->RateLimit;
@@ -53,41 +53,40 @@ void Configure(DuboPad::Client * pad){
     // Get the path for crashpad_handler - if you put it somewhere else, change below
     QDir * d = new QDir(QCoreApplication::applicationDirPath());
     d->cdUp();
-    d->cd("Helpers");
+    d->cd(QString::fromLatin1("Helpers"));
 
-    pad->config->HandlerPath = d->filePath("crashpad_handler");
+    pad->config->HandlerPath = d->filePath(QString::fromLatin1("crashpad_handler"));
 
     // Get the app data path, create a Dubopad subdir to store the crah database
     QDir * e = new QDir(QStandardPaths::standardLocations(QStandardPaths::AppDataLocation)[0]);
-    e->mkdir("Dubopad");
-    e->cd("Dubopad");
+    e->mkdir(QString::fromLatin1("Dubopad"));
+    e->cd(QString::fromLatin1("Dubopad"));
 
     pad->config->CrashDirectory = e->path();
 
     // As an example, get the rest of the configuration from the Info.plist (mac only), or set it to whatever you want
-    pad->config->Product = Helpers::ReadFromAppInfo("CFBundleName");
-    pad->config->Version = Helpers::ReadFromAppInfo("CFBundleShortVersionString");
-    pad->config->Platform = pad->config->PLATFORM_MAC();
+    pad->config->setProperty("Product", Helpers::ReadFromAppInfo(QString::fromLatin1("CFBundleName")));
+    pad->config->setProperty("Version", Helpers::ReadFromAppInfo(QString::fromLatin1("CFBundleShortVersionString")));
 
-    QString sys = Helpers::ReadFromAppInfo("DuboPadEnableSystemCrashReport");
-    if (sys == "YES"){
+    QString sys = Helpers::ReadFromAppInfo(QString::fromLatin1("DuboPadEnableSystemCrashReport"));
+    if (sys == QString::fromLatin1("YES")){
         pad->config->EnableSystemCrashReport = true;
     }
 
-    QString rl = Helpers::ReadFromAppInfo("DuboPadRateLimit");
-    if (rl == "YES"){
+    QString rl = Helpers::ReadFromAppInfo(QString::fromLatin1("DuboPadRateLimit"));
+    if (rl == QString::fromLatin1("YES")){
         pad->config->RateLimit = true;
     }
 
-    QString up = Helpers::ReadFromAppInfo("DuboPadAutoUpload");
-    if (up == "NO"){
+    QString up = Helpers::ReadFromAppInfo(QString::fromLatin1("DuboPadAutoUpload"));
+    if (up == QString::fromLatin1("NO")){
         pad->config->AutoUpload = false;
     }
 
-    pad->config->Server = Helpers::ReadFromAppInfo("DuboPadServer");
+    pad->config->Server = Helpers::ReadFromAppInfo(QString::fromLatin1("DuboPadServer"));
 
     // Any additional info you want to pass along
-    pad->config->Infos["random_foobar"] = "This is purely from QT side";
+    pad->config->Infos[QString::fromLatin1("random_foobar")] = QString::fromLatin1("This is purely from QT side");
 }
 
 /**
@@ -114,7 +113,7 @@ int mainNoJavascript(int argc, char *argv[])
     OutputConfiguration(pad);
 
     // Start the crash handler
-    pad->Start();
+    pad->start();
 
     // Shoot the app in 10... 9...
     QTimer::singleShot(10000, Helpers::nhehehehe);
@@ -145,9 +144,9 @@ int mainJavascript(int argc, char *argv[])
     DuboPad::Root * root = new DuboPad::Root();
     Helpers * crasher = new Helpers(root);
 
-    chan->registerObject("Root", root);
-    chan->registerObject("Dubo", pad);
-    chan->registerObject("Crasher", crasher);
+    chan->registerObject(QString::fromLatin1("Root"), root);
+    chan->registerObject(QString::fromLatin1("Dubo"), pad);
+    chan->registerObject(QString::fromLatin1("Crasher"), crasher);
 
     return app.exec();
 }

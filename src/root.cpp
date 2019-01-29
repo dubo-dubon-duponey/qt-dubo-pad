@@ -16,43 +16,44 @@
 namespace DuboPad{
 
 const QString Root::getName(){
-    return PROJECT_NAME;
+    // XXX should be read from the plist file instead...
+    return QString::fromUtf8(PROJECT_NAME);
 }
 
 const QString Root::getVendor(){
-    return PROJECT_VENDOR;
+    return QString::fromUtf8(PROJECT_VENDOR);
 }
 
 const QString Root::getVersion(){
-    return VERSION_FULL;
+    return QString::fromUtf8(VERSION_FULL);
 }
 
 const QString Root::getRevision(){
-    return VERSION_GIT;
+    return QString::fromUtf8(VERSION_GIT);
 }
 
 const QString Root::getBuildType(){
-    return PROJECT_BUILDTYPE;
+    return QString::fromUtf8(PROJECT_BUILDTYPE);
 }
 
 const QString Root::getLinkType(){
-    return PROJECT_LINKTYPE;
+    return QString::fromUtf8(PROJECT_LINKTYPE);
 }
 
 const QString Root::getQt(){
-    return QT_VERSION_STR;
+    return QString::fromUtf8(QT_VERSION_STR);
 }
 
 const QString Root::getChangeset(){
-    return VERSION_CHANGE;
+    return QString::fromUtf8(VERSION_CHANGE);
 }
 
 const QString Root::getLibVersion(){
-    return CRASHPAD_VERSION;
+    return QString::fromUtf8(CRASHPAD_VERSION);
 }
 
 const QString Root::getLibRevision(){
-    return CRASHPAD_REVISION;
+    return QString::fromUtf8(CRASHPAD_REVISION);
 }
 
 }

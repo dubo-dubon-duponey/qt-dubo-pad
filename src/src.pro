@@ -6,26 +6,18 @@ include($$PROJECT_ROOT/config/qmakeitup.pri)
 
 INCLUDEPATH += $$PWD
 
-DEFINES += LIBDUBOPAD_LIBRARY
-contains(DUBO_LINK_TYPE, static){
-    DEFINES += LIBDUBOPAD_USE_STATIC
-}
-
-copyToDestdir($$PWD/lib$${TARGET}/*.h, $$DESTDIR/../include/lib$${TARGET})
-copyToDestdir($$PWD/../res/redist/*, $$DESTDIR/../share/lib$${TARGET})
-
-SOURCES +=  $$PWD/root.cpp \
-            $$PWD/client.cpp
-
 HEADERS +=  $$PWD/lib$${TARGET}/global.h \
             $$PWD/lib$${TARGET}/root.h \
             $$PWD/lib$${TARGET}/config.h \
             $$PWD/lib$${TARGET}/client.h
 
+SOURCES +=  $$PWD/root.cpp \
+            $$PWD/client.cpp
+
 mac {
     # Should work for other platforms as well - to be tested
     system(mkdir -p $${DESTDIR}/../bin/)
-    copydata.commands = $(COPY_DIR) $$PWD/../third-party/build.$${DUBO_PLATFORM}.$$system(uname -m)/bin/* $${DESTDIR}/../bin/
+    copydata.commands = $(COPY_DIR) $$PWD/../third-party/$${DUBO_INTERNAL_PATH}/bin/* $${DESTDIR}/../bin/
     first.depends = $(first) copydata
     export(first.depends)
     export(copydata.commands)

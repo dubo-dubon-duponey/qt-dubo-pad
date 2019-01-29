@@ -24,9 +24,9 @@ class LIBDUBOPADSHARED_EXPORT Client: public QObject {
 public:
     explicit Client(QObject * parent = nullptr);
 
-    Q_INVOKABLE int Start();
+    Q_INVOKABLE int start();
 
-    Q_PROPERTY(Config * Config MEMBER config CONSTANT)
+    Q_PROPERTY(Config * config MEMBER config CONSTANT)
 
     Config * config = nullptr;
 

@@ -27,19 +27,22 @@ class Helpers: public QObject
 public:
     Helpers(QObject * parent = nullptr):QObject(parent){}
 
+    // Make it crash
     Q_INVOKABLE static void nhehehehe(){
         QString * dumb = nullptr;
         QByteArray a = dumb->toLocal8Bit();
     }
 
+    // Get data from plist
     static QString ReadFromAppInfo(const QString key);
 
+    // Simple webengine init
     static QWebChannel * SetupWebView()
     {
-        QFileInfo jsFileInfo(QDir::currentPath() + "/qwebchannel.js");
+        QFileInfo jsFileInfo(QDir::currentPath() + QString::fromLatin1("/qwebchannel.js"));
 
         if (!jsFileInfo.exists())
-            QFile::copy(":/qtwebchannel/qwebchannel.js", jsFileInfo.absoluteFilePath());
+            QFile::copy(QString::fromLatin1(":/qtwebchannel/qwebchannel.js"), jsFileInfo.absoluteFilePath());
 
         QtWebEngine::initialize();
         QWebEngineView * view = new QWebEngineView();
@@ -47,7 +50,7 @@ public:
         QWebChannel * channel = new QWebChannel(view->page());
         view->page()->setWebChannel(channel);
 
-        view->load(QUrl("qrc:/demo.html"));
+        view->load(QUrl(QString::fromLatin1("qrc:/demo.html")));
         view->show();
 
         return channel;
