@@ -66,3 +66,5 @@ Tested with sentry:
  * implement and test for windows and linux
  * what happens is an app is relocated / moved after start, but before crash? (eg: handler path is invalid now?)
  * write some actual documentation!
+
+ * latest version does no longer work (seems there is something wrong with the crashpad version we are using) - things do work with prebuilt: https://github.com/BugSplat-Git/my-qt-crasher

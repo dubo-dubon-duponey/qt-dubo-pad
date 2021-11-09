@@ -19,9 +19,8 @@ mac{
 }
 
 
-
-
 LIBS += -L$${DUBO_EXTERNAL}/lib
+
 INCLUDEPATH += $${DUBO_EXTERNAL}/include
 
 HEADERS += $$PWD/helpers.h

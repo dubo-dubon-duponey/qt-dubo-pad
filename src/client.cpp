@@ -35,8 +35,9 @@ int Client::start()
     // Copy over user informations
     QMap<QString, QString>::const_iterator i = config->Infos.constBegin();
     while (i != config->Infos.constEnd()) {
-        char* c = const_cast<char*>((i.key()).toStdString().c_str());
-        annotations[c] = i.value().toStdString();
+        const std::string key = i.key().toStdString();
+        const std::string value = i.value().toStdString();
+        annotations[const_cast<char*>(key.c_str())] = value;
         ++i;
     }
 
