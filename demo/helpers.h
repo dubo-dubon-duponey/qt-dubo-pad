@@ -13,7 +13,9 @@
 #define DUBOPAD_HELPERS_H
 
 #include <QObject>
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
 #include <QtWebEngine>
+#endif
 #include <QWebEngineView>
 #include <QWebEnginePage>
 #include <QFileInfo>
@@ -44,7 +46,9 @@ public:
         if (!jsFileInfo.exists())
             QFile::copy(QString::fromLatin1(":/qtwebchannel/qwebchannel.js"), jsFileInfo.absoluteFilePath());
 
-        QtWebEngine::initialize();
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+    QtWebEngine::initialize();
+#endif
         QWebEngineView * view = new QWebEngineView();
 
         QWebChannel * channel = new QWebChannel(view->page());
